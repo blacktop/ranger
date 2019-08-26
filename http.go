@@ -34,8 +34,9 @@ type HTTPClient interface {
 //
 // No network requests are made until the first I/O-related function call.
 type HTTPRanger struct {
-	URL    *url.URL
-	Client HTTPClient
+	URL                            *url.URL
+	Client                         HTTPClient
+	DisableAcceptRangesHeaderCheck bool
 
 	validator string
 	length    int64
@@ -84,7 +85,7 @@ func (r *HTTPRanger) init() error {
 			return
 		}
 
-		if !strings.Contains(resp.Header.Get(httpHeaderAcceptRanges), "bytes") {
+		if !r.DisableAcceptRangesHeaderCheck && !strings.Contains(resp.Header.Get(httpHeaderAcceptRanges), "bytes") {
 			outerErr = errors.New(r.URL.String() + " does not support byte-ranged requests.")
 			return
 		}
