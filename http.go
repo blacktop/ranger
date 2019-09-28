@@ -131,10 +131,10 @@ func (r *HTTPRanger) validateResponse(resp *http.Response) error {
 	if !statusIsAcceptable(resp.StatusCode) {
 		return statusCodeError(resp.StatusCode)
 	}
-	newValidator, err := validatorFromResponse(resp)
-	if err != nil || newValidator != r.validator {
-		return ErrResourceChanged
-	}
+	// newValidator, err := validatorFromResponse(resp)
+	// if err != nil || newValidator != r.validator {
+	// 	return ErrResourceChanged
+	// }
 	return nil
 }
 
