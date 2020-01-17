@@ -18,6 +18,7 @@ const httpHeaderContentType = "Content-Type"
 const httpHeaderIfRange = "If-Range"
 const httpHeaderLastModified = "Last-Modified"
 const httpHeaderRange = "Range"
+const httpUserAgent = "User-Agent"
 const mimeMultipartByteranges = "multipart/byteranges"
 
 // HTTPClient is an interface describing the methods required from net/http.Client
@@ -36,6 +37,7 @@ type HTTPClient interface {
 type HTTPRanger struct {
 	URL                            *url.URL
 	Client                         HTTPClient
+	UserAgent                      string
 	DisableAcceptRangesHeaderCheck bool
 
 	validator string
@@ -155,6 +157,7 @@ func (r *HTTPRanger) FetchRanges(ranges []ByteRange) ([]Block, error) {
 		Header: http.Header{
 			httpHeaderRange:   []string{makeByteRangeHeader(ranges)},
 			httpHeaderIfRange: []string{r.validator},
+			httpUserAgent:     []string{r.UserAgent},
 		},
 	}
 
