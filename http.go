@@ -76,7 +76,15 @@ func (r *HTTPRanger) init() error {
 			r.Client = &http.Client{}
 		}
 
-		resp, err := r.Client.Head(r.URL.String())
+		req := &http.Request{
+			Method: "HEAD",
+			URL:    r.URL,
+			Header: http.Header{
+				httpUserAgent: []string{r.UserAgent},
+			},
+		}
+
+		resp, err := r.Client.Do(req)
 		if err != nil {
 			outerErr = err
 			return
