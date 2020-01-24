@@ -90,6 +90,22 @@ func (r *HTTPRanger) init() error {
 			return
 		}
 
+		if resp.StatusCode == 403 {
+			req := &http.Request{
+				Method: "GET",
+				URL:    r.URL,
+				Header: http.Header{
+					httpUserAgent: []string{r.UserAgent},
+				},
+			}
+
+			resp, err = r.Client.Do(req)
+			if err != nil {
+				outerErr = err
+				return
+			}
+		}
+
 		if !statusIsAcceptable(resp.StatusCode) {
 			outerErr = statusCodeError(resp.StatusCode)
 			return
